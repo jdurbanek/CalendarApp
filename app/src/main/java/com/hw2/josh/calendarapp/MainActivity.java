@@ -1,12 +1,14 @@
 package com.hw2.josh.calendarapp;
 
 import android.content.ContentResolver;
+import android.content.Intent;
 import android.database.Cursor;
 import android.provider.CalendarContract;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.CalendarView;
 import android.widget.ListView;
@@ -144,7 +146,7 @@ public class MainActivity extends AppCompatActivity {
         String[] proj = new String[] {
                 CalendarContract.Events._ID,
                 CalendarContract.Events.TITLE,
-                CalendarContract.Events.DESCRIPTION
+                CalendarContract.Events.EVENT_LOCATION
         };
         for(int i = 0; i < myEvents.size(); i++) {
             int permissionCheck = ContextCompat.checkSelfPermission(this, android.Manifest.permission.READ_CALENDAR);
@@ -158,5 +160,12 @@ public class MainActivity extends AppCompatActivity {
             cursor.close();
         }
         return myEventData;
+    }
+
+    public void addEvent(View view) {
+        Intent intent = new Intent(this, AddEvent.class);
+        //send the calendar id we want to add the event too.
+        intent.putExtra("calendar_id", 1);
+        startActivity(intent);
     }
 }
