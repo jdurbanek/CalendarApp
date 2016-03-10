@@ -1,14 +1,21 @@
 package com.hw2.josh.calendarapp;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.provider.CalendarContract;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
+
+import java.util.Calendar;
+import java.util.TimeZone;
 
 
 /**
@@ -24,10 +31,14 @@ public class AddFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    private static final String ARG_PARAM3 = "param3";
+    private static final String ARG_PARAM4 = "param4";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+
+    private long calendar;
+    private int month;
+    private int year;
+    private int day;
 
     private EditText eventName;
     private EditText eventTime;
@@ -51,11 +62,13 @@ public class AddFragment extends Fragment {
      * @return A new instance of fragment AddFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static AddFragment newInstance(String param1, String param2) {
+    public static AddFragment newInstance(long param1, int param2, int param3, int param4) {
         AddFragment fragment = new AddFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putLong(ARG_PARAM1, param1);
+        args.putInt(ARG_PARAM2, param2);
+        args.putInt(ARG_PARAM3, param3);
+        args.putInt(ARG_PARAM4, param4);
         fragment.setArguments(args);
         return fragment;
     }
@@ -64,8 +77,10 @@ public class AddFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            calendar = getArguments().getLong(ARG_PARAM1);
+            year = getArguments().getInt(ARG_PARAM4);
+            month = getArguments().getInt(ARG_PARAM2);
+            day = getArguments().getInt(ARG_PARAM3);
         }
     }
 
@@ -96,7 +111,35 @@ public class AddFragment extends Fragment {
 
                 String event = eventName.getText().toString().trim();
                 String time = eventTime.getText().toString().trim();
+                int value;
+                try{
+                    value = Integer.parseInt(time);
+                }catch(NumberFormatException ex){
+                    //on error set default time to beginning of day.
+                    value = 0;
+                }
                 String location = eventLocation.getText().toString().trim();
+
+                Calendar cal = Calendar.getInstance();
+                cal.set(year, month, day);
+                cal.setTimeZone(TimeZone.getTimeZone("CST"));
+                cal.set(Calendar.HOUR_OF_DAY, value);
+                cal.set(Calendar.MINUTE, 0);
+                cal.set(Calendar.MILLISECOND, 0);
+                long start = cal.getTimeInMillis();
+                ContentValues values = new ContentValues();
+                values.put(CalendarContract.Events.TITLE, event);
+                values.put(CalendarContract.Events.DTSTART, start);
+                values.put(CalendarContract.Events.DTEND, start);
+                values.put(CalendarContract.Events.EVENT_LOCATION, location);
+                values.put(CalendarContract.Events.CALENDAR_ID, calendar);
+                values.put(CalendarContract.Events.EVENT_TIMEZONE, "CST");
+                values.put(CalendarContract.Events.DESCRIPTION, "Event Created.");
+
+                int permissionCheck = ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.WRITE_CALENDAR);
+                Uri uri = getActivity().getContentResolver().insert(CalendarContract.Events.CONTENT_URI, values);
+                long eventID = new Long(uri.getLastPathSegment());
+             //   Toast.makeText(getActivity().getBaseContext(), "" + eventID + " " + month + "/" + day, Toast.LENGTH_LONG).show();
 
                 getActivity().finish();
 

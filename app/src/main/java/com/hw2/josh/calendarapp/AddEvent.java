@@ -13,7 +13,9 @@ public class AddEvent extends AppCompatActivity{
 
         getFragmentManager()
                 .beginTransaction()
-                .replace(R.id.main_fragment_container, AddFragment.newInstance(null, null))
+                .replace(R.id.main_fragment_container, AddFragment.newInstance(getIntent().getLongExtra("calendar", 1),
+                                        getIntent().getIntExtra("month", 2), getIntent().getIntExtra("day", 0),
+                                        getIntent().getIntExtra("year", 2016)))
                 .addToBackStack(null)
                 .commit();
     }

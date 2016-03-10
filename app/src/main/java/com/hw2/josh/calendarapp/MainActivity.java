@@ -22,8 +22,12 @@ import java.util.jar.Manifest;
 
 public class MainActivity extends AppCompatActivity {
 
-    CalendarView calendar;
-    ListView listView;
+    private CalendarView calendar;
+    private ListView listView;
+    private long myCalendar = 1;
+    private int selectedMonth;
+    private int selectedDay;
+    private int selectedYear;
 
 
     @Override
@@ -47,7 +51,9 @@ public class MainActivity extends AppCompatActivity {
         calendar.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
-                long date = calendar.getDate();
+                selectedMonth = month;
+                selectedDay = dayOfMonth;
+                selectedYear = year;
                 int m = month + 1;
                  Toast.makeText(getApplicationContext(), m + "/"  + dayOfMonth + "/" + year, Toast.LENGTH_LONG).show();
                  ArrayList<Long> id = getEvents(dayOfMonth, month, year);
@@ -61,10 +67,10 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-/*    long findCalendar() {
+    long findCalendar() {
 
         Cursor cursor;
-        ContentResolver cr = getContentResolver();
+      //  ContentResolver cr = getContentResolver();
 
         String[] returnColumns = new String[] {
                 CalendarContract.Calendars._ID,
@@ -82,19 +88,19 @@ public class MainActivity extends AppCompatActivity {
 
         int permissionCheck = ContextCompat.checkSelfPermission(this, android.Manifest.permission.READ_CALENDAR);
 
-        cursor = cr.query(CalendarContract.Calendars.CONTENT_URI, returnColumns, selection,
+        cursor = getContentResolver().query(CalendarContract.Calendars.CONTENT_URI, returnColumns, selection,
                 selectionArgs, null);
         long id;
-        String displayName = null;
-        String accountName = null;
-        String accountType = null;
+        //String displayName = null;
+        //String accountName = null;
+        //String accountType = null;
 
         if(cursor.moveToFirst()) {
 
             id = cursor.getLong(0);
-            accountName = cursor.getString(1);
-            displayName = cursor.getString(2);
-            accountType = cursor.getString(3);
+           // accountName = cursor.getString(1);
+           // displayName = cursor.getString(2);
+           // accountType = cursor.getString(3);
             cursor.close();
             return id;
 
@@ -103,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
         cursor.close();
         return -1;
     }
-*/
+
     ArrayList<Long> getEvents(int dayOfMonth, int month, int year) {
 
     //    Cursor cursor = cr.getContentResolver().query()
@@ -165,7 +171,10 @@ public class MainActivity extends AppCompatActivity {
     public void addEvent(View view) {
         Intent intent = new Intent(this, AddEvent.class);
         //send the calendar id we want to add the event too.
-        intent.putExtra("calendar_id", 1);
+        intent.putExtra("calendar", myCalendar);
+        intent.putExtra("month", selectedMonth);
+        intent.putExtra("day", selectedDay);
+        intent.putExtra("year", selectedYear);
         startActivity(intent);
     }
 }
