@@ -32,14 +32,15 @@ public class MainActivity extends AppCompatActivity {
         calendar = (CalendarView)findViewById(R.id.calendarView);
         listView = (ListView)findViewById(R.id.listView);
 
-        ArrayList<Long> myIds = getEvents(Calendar.getInstance().get(Calendar.DAY_OF_WEEK),
-                                            Calendar.getInstance().get(Calendar.MONTH));
+
+      /*  ArrayList<Long> myIds = getEvents(Calendar.getInstance().get(Calendar.DAY_OF_WEEK),
+                                            Calendar.getInstance().get(Calendar.MONTH),);
         if(myIds.size() == 0)
             Log.d("NO IDS FOUND.", "AHHHH");
 
         ArrayList<String> d = eventData(myIds);
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getBaseContext(), android.R.layout.simple_list_item_1,d);
-        listView.setAdapter(adapter);
+        listView.setAdapter(adapter);  */
 
         calendar.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
@@ -47,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
                 long date = calendar.getDate();
                 int m = month + 1;
                  Toast.makeText(getApplicationContext(), m + "/"  + dayOfMonth + "/" + year, Toast.LENGTH_LONG).show();
-                 ArrayList<Long> id = getEvents(dayOfMonth, month);
+                 ArrayList<Long> id = getEvents(dayOfMonth, month, year);
                 ArrayList<String> data = eventData(id);
                  ArrayAdapter<String> adapter = new ArrayAdapter<>(getBaseContext(), android.R.layout.simple_list_item_1,data);
                  listView.setAdapter(adapter);
@@ -101,23 +102,19 @@ public class MainActivity extends AppCompatActivity {
         return -1;
     }
 */
-    ArrayList<Long> getEvents(int dayOfMonth, int month) {
+    ArrayList<Long> getEvents(int dayOfMonth, int month, int year) {
 
     //    Cursor cursor = cr.getContentResolver().query()
         ArrayList<Long> eventIDs = new ArrayList<>();
         Calendar beginCalendar = Calendar.getInstance();
-      //  beginCalendar.set(Calendar.YEAR, Calendar.MONTH, Calendar.DAY_OF_MONTH, 0, 1);
-        beginCalendar.add(Calendar.DAY_OF_WEEK, dayOfMonth - 1);
+        beginCalendar.set(year, month, dayOfMonth);
         beginCalendar.setTimeZone(TimeZone.getTimeZone("CST"));
-        beginCalendar.set(Calendar.MONTH, month);
         beginCalendar.set(Calendar.HOUR_OF_DAY, 0);
         beginCalendar.set(Calendar.MINUTE, 0);
         beginCalendar.set(Calendar.MILLISECOND, 0);
         Calendar endCalendar = Calendar.getInstance();
-        //endCalendar.set(Calendar.YEAR, Calendar.MONTH, Calendar.DAY_OF_MONTH, 23, 59);
-        endCalendar.add(Calendar.DAY_OF_WEEK, dayOfMonth-1);
-        beginCalendar.setTimeZone(TimeZone.getTimeZone("CST"));
-        endCalendar.set(Calendar.MONTH, month);
+        endCalendar.set(year, month, dayOfMonth);
+        endCalendar.setTimeZone(TimeZone.getTimeZone("CST"));
         endCalendar.set(Calendar.HOUR_OF_DAY, 23);
         endCalendar.set(Calendar.MINUTE, 59);
         endCalendar.set(Calendar.MILLISECOND, 0);
@@ -149,10 +146,10 @@ public class MainActivity extends AppCompatActivity {
                 CalendarContract.Events.TITLE,
                 CalendarContract.Events.DESCRIPTION
         };
-        if(myEvents.size() > 0) {
+        for(int i = 0; i < myEvents.size(); i++) {
             int permissionCheck = ContextCompat.checkSelfPermission(this, android.Manifest.permission.READ_CALENDAR);
             Cursor cursor = getContentResolver().query(CalendarContract.Events.CONTENT_URI, proj,
-                    CalendarContract.Events._ID + " = ? ", new String[]{Long.toString(myEvents.get(0))}, null);
+                    CalendarContract.Events._ID + " = ? ", new String[]{Long.toString(myEvents.get(i))}, null);
 
             if (cursor.moveToFirst()) {
                 myEventData.add(cursor.getString(1) + "\n" + cursor.getString(2));
