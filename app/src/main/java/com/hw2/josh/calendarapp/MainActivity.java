@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CalendarView;
 import android.widget.ListView;
@@ -28,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
     private int selectedMonth;
     private int selectedDay;
     private int selectedYear;
+    private ArrayList<String> data;
 
 
     @Override
@@ -57,12 +59,22 @@ public class MainActivity extends AppCompatActivity {
                 int m = month + 1;
                  Toast.makeText(getApplicationContext(), m + "/"  + dayOfMonth + "/" + year, Toast.LENGTH_LONG).show();
                  ArrayList<Long> id = getEvents(dayOfMonth, month, year);
-                ArrayList<String> data = eventData(id);
+                    data = eventData(id);
                  ArrayAdapter<String> adapter = new ArrayAdapter<>(getBaseContext(), android.R.layout.simple_list_item_1,data);
                  listView.setAdapter(adapter);
 
             }
         });
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Toast.makeText(getApplicationContext(), "Selected.", Toast.LENGTH_LONG).show();
+            }
+
+        });
+
+
 
 
     }
@@ -110,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
         return -1;
     }
 
-    ArrayList<Long> getEvents(int dayOfMonth, int month, int year) {
+    public ArrayList<Long> getEvents(int dayOfMonth, int month, int year) {
 
     //    Cursor cursor = cr.getContentResolver().query()
         ArrayList<Long> eventIDs = new ArrayList<>();
@@ -175,6 +187,13 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra("month", selectedMonth);
         intent.putExtra("day", selectedDay);
         intent.putExtra("year", selectedYear);
+        startActivity(intent);
+    }
+
+    public void deleteEvent(View view) {
+        Intent intent = new Intent(this, DeleteEvent.class);
+
+        intent.putStringArrayListExtra("events", data);
         startActivity(intent);
     }
 }

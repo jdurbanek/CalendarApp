@@ -26,7 +26,8 @@
         <ListView
             android:layout_width="183dp"
             android:layout_height="146dp"
-            android:id="@+id/listView" />
+            android:id="@+id/listView"
+            />
 
         <LinearLayout
             android:orientation="vertical"
@@ -45,7 +46,8 @@
                 android:layout_height="wrap_content"
                 android:text="Delete Event"
                 android:id="@+id/DeleteButton"
-                android:layout_gravity="bottom" />
+                android:layout_gravity="bottom"
+                android:onClick="deleteEvent"/>
         </LinearLayout>
 
     </LinearLayout>
