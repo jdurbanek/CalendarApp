@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -28,7 +29,7 @@ public class DeleteFragment extends Fragment {
    // private static final String ARG_PARAM1 = "param1";
   //  private static final String ARG_PARAM2 = "param2";
    // private static final String ARG_PARAM3 = "param3";
-   // private static final String ARG_PARAM4 = "param4";
+    private static final String ARG_PARAM4 = "param4";
     private static final String ARG_PARAM5 = "param5";
 
 
@@ -40,6 +41,7 @@ public class DeleteFragment extends Fragment {
     private int month;
     private int day;
     private int year;
+    private ArrayList<Integer> ids;
     private ArrayList<String> events;
 
     private ListView listView;
@@ -59,13 +61,13 @@ public class DeleteFragment extends Fragment {
      * @return A new instance of fragment DeleteFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static DeleteFragment newInstance(ArrayList<String> param5) {
+    public static DeleteFragment newInstance(ArrayList<String> param5, ArrayList<Integer> param4) {
         DeleteFragment fragment = new DeleteFragment();
         Bundle args = new Bundle();
        // args.putLong(ARG_PARAM1, param1);
       //  args.putInt(ARG_PARAM2, param2);
       //  args.putInt(ARG_PARAM3, param3);
-      //  args.putInt(ARG_PARAM4, param4);
+        args.putIntegerArrayList(ARG_PARAM4, param4);
         args.putStringArrayList(ARG_PARAM5, param5);
         fragment.setArguments(args);
         return fragment;
@@ -78,7 +80,7 @@ public class DeleteFragment extends Fragment {
      //       calendar= getArguments().getLong(ARG_PARAM1);
       //      month = getArguments().getInt(ARG_PARAM2);
       //      day = getArguments().getInt(ARG_PARAM3);
-      //      year = getArguments().getInt(ARG_PARAM4);
+            ids = getArguments().getIntegerArrayList(ARG_PARAM4);
             events = getArguments().getStringArrayList(ARG_PARAM5);
         }
     }
@@ -104,6 +106,7 @@ public class DeleteFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 //delete event.
+                Toast.makeText(getActivity(), "" + ids.get(position), Toast.LENGTH_LONG).show();
             }
         });
     }

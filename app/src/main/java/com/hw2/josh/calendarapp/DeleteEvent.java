@@ -12,7 +12,8 @@ public class DeleteEvent extends AppCompatActivity {
 
         getFragmentManager()
                 .beginTransaction()
-                .replace(R.id.delete_fragment_container, DeleteFragment.newInstance(getIntent().getStringArrayListExtra("events")))
+                .replace(R.id.delete_fragment_container, DeleteFragment.newInstance(getIntent().getStringArrayListExtra("events"),
+                        getIntent().getIntegerArrayListExtra("ids")))
                 .addToBackStack(null)
                 .commit();
     }

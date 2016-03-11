@@ -18,6 +18,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.TimeZone;
+import static java.lang.Math.*;
 import java.util.jar.Manifest;
 
 
@@ -30,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
     private int selectedDay;
     private int selectedYear;
     private ArrayList<String> data;
+    private ArrayList<Integer> eventID;
 
 
     @Override
@@ -59,6 +61,9 @@ public class MainActivity extends AppCompatActivity {
                 int m = month + 1;
                  Toast.makeText(getApplicationContext(), m + "/"  + dayOfMonth + "/" + year, Toast.LENGTH_LONG).show();
                  ArrayList<Long> id = getEvents(dayOfMonth, month, year);
+                for(int i = 0; i < id.size(); i++){
+                    eventID.add(id.get(i).intValue());
+                }
                     data = eventData(id);
                  ArrayAdapter<String> adapter = new ArrayAdapter<>(getBaseContext(), android.R.layout.simple_list_item_1,data);
                  listView.setAdapter(adapter);
@@ -194,6 +199,7 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, DeleteEvent.class);
 
         intent.putStringArrayListExtra("events", data);
+        intent.putIntegerArrayListExtra("ids", eventID);
         startActivity(intent);
     }
 }
