@@ -18,8 +18,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.TimeZone;
-import static java.lang.Math.*;
-import java.util.jar.Manifest;
+
 
 
 public class MainActivity extends AppCompatActivity {
@@ -43,14 +42,6 @@ public class MainActivity extends AppCompatActivity {
         listView = (ListView)findViewById(R.id.listView);
 
 
-      /*  ArrayList<Long> myIds = getEvents(Calendar.getInstance().get(Calendar.DAY_OF_WEEK),
-                                            Calendar.getInstance().get(Calendar.MONTH),);
-        if(myIds.size() == 0)
-            Log.d("NO IDS FOUND.", "AHHHH");
-
-        ArrayList<String> d = eventData(myIds);
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(getBaseContext(), android.R.layout.simple_list_item_1,d);
-        listView.setAdapter(adapter);  */
 
         calendar.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
@@ -59,8 +50,9 @@ public class MainActivity extends AppCompatActivity {
                 selectedDay = dayOfMonth;
                 selectedYear = year;
                 int m = month + 1;
-                 Toast.makeText(getApplicationContext(), m + "/"  + dayOfMonth + "/" + year, Toast.LENGTH_LONG).show();
-                 ArrayList<Long> id = getEvents(dayOfMonth, month, year);
+                Toast.makeText(getApplicationContext(), m + "/"  + dayOfMonth + "/" + year, Toast.LENGTH_LONG).show();
+                ArrayList<Long> id = getEvents(dayOfMonth, month, year);
+                eventID = new ArrayList<>();
                 for(int i = 0; i < id.size(); i++){
                     eventID.add(id.get(i).intValue());
                 }
@@ -70,62 +62,8 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(getApplicationContext(), "Selected.", Toast.LENGTH_LONG).show();
-            }
-
-        });
-
-
-
-
     }
 
-    long findCalendar() {
-
-        Cursor cursor;
-      //  ContentResolver cr = getContentResolver();
-
-        String[] returnColumns = new String[] {
-                CalendarContract.Calendars._ID,
-                CalendarContract.Calendars.ACCOUNT_NAME,
-                CalendarContract.Calendars.CALENDAR_DISPLAY_NAME,
-                CalendarContract.Calendars.ACCOUNT_TYPE
-        };
-
-        String selection = "((" + CalendarContract.Calendars.ACCOUNT_NAME + " = ?) AND " +
-                 "(" + CalendarContract.Calendars.ACCOUNT_TYPE + " = ? AND"
-                + "(" + CalendarContract.Calendars.CALENDAR_DISPLAY_NAME + " = ? ))";
-
-        String[]  selectionArgs = {"urby33@gmail.com", "google.com", "urby33@gmail.com"};
-
-
-        int permissionCheck = ContextCompat.checkSelfPermission(this, android.Manifest.permission.READ_CALENDAR);
-
-        cursor = getContentResolver().query(CalendarContract.Calendars.CONTENT_URI, returnColumns, selection,
-                selectionArgs, null);
-        long id;
-        //String displayName = null;
-        //String accountName = null;
-        //String accountType = null;
-
-        if(cursor.moveToFirst()) {
-
-            id = cursor.getLong(0);
-           // accountName = cursor.getString(1);
-           // displayName = cursor.getString(2);
-           // accountType = cursor.getString(3);
-            cursor.close();
-            return id;
-
-        }
-        //if no calendar found.
-        cursor.close();
-        return -1;
-    }
 
     public ArrayList<Long> getEvents(int dayOfMonth, int month, int year) {
 

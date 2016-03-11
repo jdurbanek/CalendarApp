@@ -139,7 +139,7 @@ public class AddFragment extends Fragment {
                 int permissionCheck = ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.WRITE_CALENDAR);
                 Uri uri = getActivity().getContentResolver().insert(CalendarContract.Events.CONTENT_URI, values);
                 long eventID = new Long(uri.getLastPathSegment());
-             //   Toast.makeText(getActivity().getBaseContext(), "" + eventID + " " + month + "/" + day, Toast.LENGTH_LONG).show();
+//                Toast.makeText(getActivity().getBaseContext(), "" + eventID + " " + month + "/" + day, Toast.LENGTH_LONG).show();
 
                 getActivity().finish();
 

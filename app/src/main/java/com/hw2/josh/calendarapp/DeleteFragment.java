@@ -4,6 +4,8 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.provider.CalendarContract;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -106,7 +108,18 @@ public class DeleteFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 //delete event.
-                Toast.makeText(getActivity(), "" + ids.get(position), Toast.LENGTH_LONG).show();
+             //   Toast.makeText(getActivity(), "" + ids.get(position), Toast.LENGTH_LONG).show();
+                String[] selArgs =
+                        new String[]{Integer.toString(ids.get(position))};
+                int permissionCheck = ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.WRITE_CALENDAR);
+                int deleted =
+                        getActivity().getContentResolver().
+                                delete(
+                                        CalendarContract.Events.CONTENT_URI,
+                                        CalendarContract.Events._ID + " =? ",
+                                        selArgs);
+
+                getActivity().finish();
             }
         });
     }
